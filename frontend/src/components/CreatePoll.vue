@@ -42,10 +42,9 @@
 </template>
 
 <script>
+import store from '../store'
+
 export default {
-    setup() {
-        
-    },
     methods: {
         createPoll: function () {
             let headers = new Headers({
@@ -59,7 +58,8 @@ export default {
                 body: JSON.stringify({
                     pollName: this.pollName,
                     optionOne: this.optionOne,
-                    optionTwo: this.optionTwo
+                    optionTwo: this.optionTwo,
+                    userId: store.state.token
                 })
             })
                 .then(response => response.json())
