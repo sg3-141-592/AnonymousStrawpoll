@@ -12,6 +12,7 @@ class Poll(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String)
     options = Column(JSON)
+    user = Column(String, index=True)
 
 Base.metadata.create_all(engine)
 
