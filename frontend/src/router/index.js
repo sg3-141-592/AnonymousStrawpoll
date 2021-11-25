@@ -9,8 +9,8 @@ const routes = [
     component: Home
   },
   {
-    path: '/view-poll',
-    name: 'View Poll',
+    path: '/view-poll/:id',
+    name: 'ViewPoll',
     component: ViewPoll
   },
 ]

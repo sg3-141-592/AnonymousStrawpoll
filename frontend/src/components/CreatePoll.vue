@@ -43,6 +43,7 @@
 
 <script>
 import store from '../store'
+import router from '../router/index.js'
 
 export default {
     methods: {
@@ -63,7 +64,9 @@ export default {
                 })
             })
                 .then(response => response.json())
-                .then(data => console.log(data));
+                .then(data => router.push(
+                    {name: 'ViewPoll', params: {id: data.id}}
+                ));
         }
     },
     data() {
