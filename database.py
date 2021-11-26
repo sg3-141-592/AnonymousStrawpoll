@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import func
 import datetime
 
-engine = create_engine('sqlite:///data.db', echo=True)
+engine = create_engine('sqlite:///data.db')
 
 Base = declarative_base()
 

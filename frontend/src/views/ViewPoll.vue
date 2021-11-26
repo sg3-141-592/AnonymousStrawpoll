@@ -21,7 +21,6 @@ import store from '../store'
 
 export default {
     mounted() {
-        console.log(this.$route.params.id)
         this.$socket.emit('join', {
             'pollId': this.$route.params.id,
             'userId': store.state.token
@@ -37,7 +36,7 @@ export default {
             console.log("SocketIO connected")
         },
         update: function(data) {
-            this.pollData = JSON.parse(data)
+            this.pollData = data
         }
     },
     data() {

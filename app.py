@@ -1,4 +1,4 @@
-from flask import Flask, request, json
+from flask import Flask, request, json, Response
 from flask_socketio import SocketIO, join_room, leave_room, emit
 import random_name
 import database
@@ -24,16 +24,32 @@ def createPoll():
     database.session.add(newPoll)
     database.session.commit()
     
-    return json.dumps({
-        'id': publicId
-    }), 200
+    return Response(json.dumps({
+            'id': publicId
+        }),
+        status=200,
+        mimetype='application/json'
+    )
 
 """
 Get a list of polls for a particular user
 """
 @app.route('/getPolls', methods=['GET'])
 def getPolls():
-    return "OK", 200
+    userId = request.args.get('userId')
+    print(userId)
+    polls = database.session.query(database.Poll).filter_by(userId=userId)
+    pollList = []
+    for pollObject in polls:
+        pollList.append({
+            'name': pollObject.name,
+            'url': pollObject.publicId
+        })
+    return Response(
+        json.dumps(pollList),
+        status=200,
+        mimetype='application/json'
+    )
 
 @socketio.on('connect')
 def get_connect():
@@ -45,13 +61,13 @@ def getPollData(pollId):
         'name': pollObject.name,
         'options': pollObject.options
     }
-    return json.dumps(pollJson)
+    return pollJson
 
 @socketio.on('join')
 def on_join(data):
     join_room(data['pollId'])
     currentUser = request.sid
-    emit('update', getPollData(data['pollId']), to=currentUser)
+    emit('update', getPollData(data['pollId']), to=currentUser, json=True)
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
