@@ -14,6 +14,7 @@
             </div>
         </div>
     </div>
+    {{ votingData }}
 </template>
 
 <script>
@@ -22,26 +23,35 @@ import store from '../store'
 export default {
     mounted() {
         this.$socket.emit('join', {
-            'pollId': this.$route.params.id,
-            'userId': store.state.token
+            pollId: this.$route.params.id,
+            userId: store.state.token
         })
     },
     methods: {
         sliderChanged: function () {
             console.log(this.slider)
+            this.$socket.emit('vote', {
+                value: this.slider,
+                pollId: this.$route.params.id,
+                userId: store.state.token
+            })
         }
     },
     sockets: {
         connect: function() {
             console.log("SocketIO connected")
         },
-        update: function(data) {
+        updatePollDetails: function(data) {
             this.pollData = data
+        },
+        updateVotingDetails: function(data) {
+            this.votingData = data
         }
     },
     data() {
         return {
             pollData: null,
+            votingData: null,
             slider: 0.50
         }
     }

@@ -1,5 +1,5 @@
 from flask import Flask, request, json, Response
-from flask_socketio import SocketIO, join_room, leave_room, emit
+from flask_socketio import SocketIO, join_room, leave_room, emit, rooms
 import random_name
 import database
 
@@ -38,7 +38,7 @@ Get a list of polls for a particular user
 def getPolls():
     userId = request.args.get('userId')
     print(userId)
-    polls = database.session.query(database.Poll).filter_by(userId=userId)
+    polls = database.session.query(database.Poll).filter_by(userId=userId).order_by(database.Poll.created.desc())
     pollList = []
     for pollObject in polls:
         pollList.append({
@@ -59,15 +59,29 @@ def getPollData(pollId):
     pollObject = database.session.query(database.Poll).filter_by(publicId=pollId).one()
     pollJson = {
         'name': pollObject.name,
-        'options': pollObject.options
+        'options': pollObject.options,
     }
     return pollJson
+
+@socketio.on('vote')
+def vote(data):
+    newVote = database.Vote(
+        value = data['value'],
+        pollId = data['pollId'],
+        userId = data['userId']
+    )
+    database.session.add(newVote)
+    database.session.commit()
+    
+    print("Vote update")
+    emit('updateVotingDetails', database.getLatestVotes(data['pollId']), room=data['pollId'], json=True)
 
 @socketio.on('join')
 def on_join(data):
     join_room(data['pollId'])
     currentUser = request.sid
-    emit('update', getPollData(data['pollId']), to=currentUser, json=True)
+    emit('updatePollDetails', getPollData(data['pollId']), to=currentUser, json=True)
+    emit('updateVotingDetails', database.getLatestVotes(data['pollId']), to=currentUser, json=True)
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
