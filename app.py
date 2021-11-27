@@ -75,13 +75,16 @@ def vote(data):
     
     print("Vote update")
     emit('updateVotingDetails', database.getLatestVotes(data['pollId']), room=data['pollId'], json=True)
+    emit('updateAnalyticsDetails', database.getAverageVoteData(data['pollId']), room=data['pollId'], json=True)
 
 @socketio.on('join')
 def on_join(data):
-    join_room(data['pollId'])
+    pollId = data['pollId']
+    join_room(pollId)
     currentUser = request.sid
-    emit('updatePollDetails', getPollData(data['pollId']), to=currentUser, json=True)
-    emit('updateVotingDetails', database.getLatestVotes(data['pollId']), to=currentUser, json=True)
+    emit('updatePollDetails', getPollData(pollId), to=currentUser, json=True)
+    emit('updateVotingDetails', database.getLatestVotes(pollId), to=currentUser, json=True)
+    emit('updateAnalyticsDetails', database.getAverageVoteData(pollId), to=currentUser, json=True)
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)

@@ -8,8 +8,14 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.4",
     "bulma": "^0.9.3",
+    "chart.js": "^3.6.0",
+    "chartjs-adapter-moment": "^1.0.0",
+    "chartjs-plugin-trendline": "^0.1.1",
     "core-js": "^3.6.5",
+    "emoji-awesome": "^0.0.2",
+    "moment": "^2.29.1",
     "socket.io": "^4.4.0",
     "socket.io-client": "^4.4.0",
     "vue": "^3.0.0",

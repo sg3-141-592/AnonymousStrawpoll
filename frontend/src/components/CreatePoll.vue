@@ -25,6 +25,10 @@
                 </div>
 
                 <div class="field">
+                    <select-emoji :selectedEmoji="optionOneSelectedEmoji" v-on:updateEmoji="emojiUpdate"/>
+                </div>
+
+                <div class="field">
                     <label class="label">Option 2</label>
                     <div class="control">
                         <input v-model="optionTwo" class="input" type="text" placeholder="Option 2">
@@ -44,9 +48,16 @@
 <script>
 import store from '../store'
 import router from '../router/index.js'
+import SelectEmoji from '../components/SelectEmoji.vue'
 
 export default {
+    components: {
+        SelectEmoji
+    },
     methods: {
+        emojiUpdate(data) {
+            this.optionOneSelectedEmoji = data
+        },
         createPoll: function () {
             let headers = new Headers({
                 'Accept': 'application/json, text/plain, */*',
@@ -73,6 +84,7 @@ export default {
         return {
             pollName: "",
             optionOne: "",
+            optionOneSelectedEmoji: "fa-atom",
             optionTwo: "",
         }
     }

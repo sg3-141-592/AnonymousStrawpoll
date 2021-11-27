@@ -27,12 +27,46 @@ class Vote(Base):
     userId = Column(String, index=True)
     created = Column(DateTime(timezone=True), default=datetime.datetime.utcnow)
 
+# class Analytics(Base):
+#     __tablename__ = 'analytics'
+
+#     id = Column(Integer, primary_key=True)
+#     pollId = Column(Integer, ForeignKey('polls.publicId'), index=True)
+#     value = Column(JSON())
+
 
 Base.metadata.create_all(engine)
 
 # Create a session
 Session = sessionmaker(bind=engine)
 session = Session()
+
+"""
+Get the votes over time for the poll
+"""
+def getAverageVoteData(pollId):
+    labels = []
+    data = []
+    averageData = []
+    latestVote = {}
+
+    for item in session.query(Vote.userId, Vote.value, Vote.created).filter_by(pollId=pollId):
+        latestVote[item[0]] = item[1]
+        average = 0
+        for user in latestVote.keys():
+            average += latestVote[user]
+        average /= len(latestVote.keys())
+        averageData.append({
+            'y': average,
+            'x': datetime.datetime.timestamp(item[2])
+        })
+        labels.append(datetime.datetime.timestamp(item[2]))
+        data.append(average)
+    return averageData
+    # return {
+    #     'labels': labels,
+    #     'data': data
+    # }
 
 """
 Get the latest votes for all of the users
