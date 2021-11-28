@@ -2,10 +2,20 @@
     <div v-if="pollData != null">
         <h1 class="title has-text-centered">{{ pollData.name }}</h1>
         <div>
-            <span>{{ pollData.options.one }}</span>&nbsp;
+            <span class="icon-text">
+                <span class="icon">
+                    <i :class="`fas ${ pollData.options.oneEmoji }`"></i>
+                </span>
+                <span>{{ pollData.options.one }}</span>
+            </span>&nbsp;
             <input v-model="slider" type="range"
                 min="0" max="1" step="0.01" @change="sliderChanged">&nbsp;
-            <span>{{ pollData.options.two }}</span>
+            <span class="icon-text">
+                <span class="icon">
+                    <i :class="`fas ${ pollData.options.twoEmoji }`"></i>
+                </span>
+                <span>{{ pollData.options.two }}</span>
+            </span>
         </div>
     </div>
     <div v-if="analyticsData != null">
@@ -64,7 +74,7 @@ export default {
 
 <style scoped>
     input[type="range"] {
-        width: 80%;
+        width: 70%;
         text-align: center;
         vertical-align: bottom;
     }

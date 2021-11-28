@@ -25,7 +25,7 @@
                 </div>
 
                 <div class="field">
-                    <select-emoji :selectedEmoji="optionOneSelectedEmoji" v-on:updateEmoji="emojiUpdate"/>
+                    <select-emoji v-model:selectedEmoji="optionOneSelectedEmoji" @selectionChanged="data => optionOneSelectedEmoji = data"/>
                 </div>
 
                 <div class="field">
@@ -33,6 +33,10 @@
                     <div class="control">
                         <input v-model="optionTwo" class="input" type="text" placeholder="Option 2">
                     </div>
+                </div>
+
+                <div class="field">
+                    <select-emoji v-model:selectedEmoji="optionTwoSelectedEmoji"  @selectionChanged="data => optionTwoSelectedEmoji = data"/>
                 </div>
 
             </div>
@@ -55,9 +59,6 @@ export default {
         SelectEmoji
     },
     methods: {
-        emojiUpdate(data) {
-            this.optionOneSelectedEmoji = data
-        },
         createPoll: function () {
             let headers = new Headers({
                 'Accept': 'application/json, text/plain, */*',
@@ -70,7 +71,9 @@ export default {
                 body: JSON.stringify({
                     pollName: this.pollName,
                     optionOne: this.optionOne,
+                    optionOneEmoji: this.optionOneSelectedEmoji,
                     optionTwo: this.optionTwo,
+                    optionTwoEmoji: this.optionTwoSelectedEmoji,
                     userId: store.state.token
                 })
             })
@@ -86,6 +89,7 @@ export default {
             optionOne: "",
             optionOneSelectedEmoji: "fa-atom",
             optionTwo: "",
+            optionTwoSelectedEmoji: "fa-frown-open",
         }
     }
 }

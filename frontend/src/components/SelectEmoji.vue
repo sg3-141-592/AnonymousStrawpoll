@@ -13,15 +13,16 @@
 export default {
     methods: {
         emojiClicked(emojiName) {
-            this.$emit('updateEmoji', emojiName)
+            this.$emit('selectionChanged', emojiName)
         }
     },
     data() {
         return {
-            fontList: ['fa-frown', 'fa-frown-open',
+            fontList: ['fa-frown', 'fa-frown-open', 'fa-beer', 'fa-bell',
                 'fa-grin-hearts', 'fa-laugh-beam', 'fa-atom', 'fa-sun']
         }
     },
-    props: ['selectedEmoji']
+    props: ['selectedEmoji'],
+    emits: ['selectionChanged']
 }
 </script>

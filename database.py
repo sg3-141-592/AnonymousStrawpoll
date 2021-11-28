@@ -3,8 +3,9 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import func
 import datetime
+import pandas as pd
 
-engine = create_engine('sqlite:///data.db', echo=False)
+engine = create_engine('sqlite:///data.db', connect_args={"check_same_thread": False}, echo=False)
 
 Base = declarative_base()
 
@@ -45,8 +46,6 @@ session = Session()
 Get the votes over time for the poll
 """
 def getAverageVoteData(pollId):
-    labels = []
-    data = []
     averageData = []
     latestVote = {}
 
@@ -58,15 +57,21 @@ def getAverageVoteData(pollId):
         average /= len(latestVote.keys())
         averageData.append({
             'y': average,
-            'x': datetime.datetime.timestamp(item[2])
+            'x': item[2]
         })
-        labels.append(datetime.datetime.timestamp(item[2]))
-        data.append(average)
-    return averageData
-    # return {
-    #     'labels': labels,
-    #     'data': data
-    # }
+    
+    df = pd.DataFrame(averageData)
+    print(df)
+    df = df.set_index('x')
+    resampled = df.resample('60S', label='right').mean().dropna()
+    outputData = []
+    for index, row in resampled.iterrows():
+        outputData.append({
+            'x' : datetime.datetime.timestamp(index),
+            'y' : row['y']
+        })
+    
+    return outputData
 
 """
 Get the latest votes for all of the users
@@ -91,3 +96,34 @@ def getLatestVotes(pollId):
         votes.append(item.value)
     
     return votes
+
+averageData = []
+latestVote = {}
+for item in session.query(Vote.userId, Vote.value, Vote.created).filter_by(pollId='woolly-peach-fousek'):
+        latestVote[item[0]] = item[1]
+        average = 0
+        for user in latestVote.keys():
+            average += latestVote[user]
+        average /= len(latestVote.keys())
+        averageData.append({
+            'y': average,
+            'x': item[2] #datetime.datetime.timestamp(item[2])
+        })
+
+# df = pd.DataFrame(averageData)
+# df = df.set_index('x')
+# resampled = df.resample('60S', label='right').mean().dropna()
+# outputData = []
+# for index, row in resampled.iterrows():
+#     outputData.append({
+#         'x' : datetime.datetime.timestamp(index),
+#         'y' : row['y']
+#     })
+# print(outputData)
+# # df = pd.read_sql(query.statement, session.bind)
+# # df = df.set_index('created')
+
+# resampled = df.resample('60S', label='right').mean().dropna()
+
+
+# print(resampled.to_json(orient="table"))
