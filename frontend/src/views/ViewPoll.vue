@@ -19,7 +19,7 @@
         </div>
     </div>
     <div v-if="analyticsData != null">
-        <average-graph :chartData="analyticsData"/>
+        <average-graph :chartData="analyticsData" :axisLabels="{one:pollData.options.one, two:pollData.options.two}"/>
     </div>
 </template>
 

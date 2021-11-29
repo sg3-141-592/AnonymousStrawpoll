@@ -6,7 +6,9 @@
           <span class="icon">
             <i class="fas fa-info-circle"></i>
           </span>
-          <span>Anon Strawpoll</span>
+          <span>
+            <router-link to="/">Anon Strawpoll</router-link>
+          </span>
         </span>
       </p>
     </div>

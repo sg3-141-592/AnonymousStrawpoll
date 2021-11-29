@@ -1,5 +1,6 @@
 import { createStore } from "vuex"
 import { VuexPersistence } from 'vuex-persist'
+import { v4 as uuidv4 } from 'uuid'
 
 const store = createStore({
     state: {
@@ -8,7 +9,7 @@ const store = createStore({
     mutations: {
         createInitialToken(state) {
             if (state.token == "TO_BE_DEFINED") {
-                state.token = "SeanToken1abc"
+                state.token = uuidv4()
             }
         }
     },

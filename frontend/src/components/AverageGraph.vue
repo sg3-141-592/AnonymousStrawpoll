@@ -3,9 +3,9 @@
 </template>
 
 <script>
-import moment from 'moment';
 import Chart from 'chart.js/auto';
-import 'chartjs-adapter-moment';
+import 'chartjs-adapter-date-fns';
+import regression from 'regression';
 
 var data = {
   datasets: [{
@@ -17,20 +17,29 @@ var data = {
 };
 
 var config = {
-  type: 'scatter',
+  type: 'line',
   data: data,
   options: {
-      responsive: true,
+      parsing: false,
       scales: {
           x: {
+                display: "true",
                 type: "time",
                 ticks: {
-                    source: 'auto'
+                    source: 'auto',
                 },
                 time: {
-                    // format: timeFormat,
                     unit: 'second'
-                }
+                },
+          },
+          y: {
+              min: 0.0,
+              max: 1.0,
+              stepSize: 0.2,
+              title: {
+                  display: true,
+                  text: "PLACEHOLDER",
+              }
           }
       }
   }
@@ -44,24 +53,22 @@ export default {
         }
     },
     mounted() {
-        // data.labels = this.chartData.labels
-        // data.datasets[0].data = this.chartData.data
+        config.options.scales.y.title.text = `${this.axisLabels.one} - ${this.axisLabels.two}`;
         data.datasets = [{
             label: 'Average Vote',
             data: this.chartData,
             fill: false,
             borderColor: 'red'
         }]
-        console.log(data.datasets)
+
+        console.log(regression.polynomial(this.chartData, { order: 2 }))
         
         this.myChart = new Chart(
             document.getElementById('myChart'),
             config
         );
-
-        console.log(moment)
     },
-    props: ['chartData'],
+    props: ['chartData', 'axisLabels'],
     watch: {
         chartData: function() {
           this.updateGraph()

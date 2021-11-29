@@ -4,6 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import func
 import datetime
 import pandas as pd
+import numpy as np
 
 engine = create_engine('sqlite:///data.db', connect_args={"check_same_thread": False}, echo=False)
 
@@ -60,8 +61,8 @@ def getAverageVoteData(pollId):
             'x': item[2]
         })
     
+    # Resample data
     df = pd.DataFrame(averageData)
-    print(df)
     df = df.set_index('x')
     resampled = df.resample('60S', label='right').mean().dropna()
     outputData = []
@@ -70,6 +71,10 @@ def getAverageVoteData(pollId):
             'x' : datetime.datetime.timestamp(index),
             'y' : row['y']
         })
+    
+    # Calculate polynomial regression
+    npData = df.to_numpy()
+    print(np.polyfit(npData[0], npData[1], deg=2))
     
     return outputData
 
@@ -97,18 +102,18 @@ def getLatestVotes(pollId):
     
     return votes
 
-averageData = []
-latestVote = {}
-for item in session.query(Vote.userId, Vote.value, Vote.created).filter_by(pollId='woolly-peach-fousek'):
-        latestVote[item[0]] = item[1]
-        average = 0
-        for user in latestVote.keys():
-            average += latestVote[user]
-        average /= len(latestVote.keys())
-        averageData.append({
-            'y': average,
-            'x': item[2] #datetime.datetime.timestamp(item[2])
-        })
+# averageData = []
+# latestVote = {}
+# for item in session.query(Vote.userId, Vote.value, Vote.created).filter_by(pollId='woolly-peach-fousek'):
+#         latestVote[item[0]] = item[1]
+#         average = 0
+#         for user in latestVote.keys():
+#             average += latestVote[user]
+#         average /= len(latestVote.keys())
+#         averageData.append({
+#             'y': average,
+#             'x': item[2] #datetime.datetime.timestamp(item[2])
+#         })
 
 # df = pd.DataFrame(averageData)
 # df = df.set_index('x')
