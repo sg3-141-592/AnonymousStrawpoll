@@ -1,10 +1,16 @@
 from flask import Flask, request, json, Response
 from flask_socketio import SocketIO, join_room, leave_room, emit, rooms
+import logging
 import random_name
 import database
 
+import eventlet
+eventlet.monkey_patch()
+
+defaultLogger = logging.basicConfig(filename='errors.log', level=logging.INFO)
+
 app = Flask(__name__)
-socketio = SocketIO(app, cors_allowed_origins="*")
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
 
 @app.route('/createPoll', methods=['POST'])
 def createPoll():
@@ -57,11 +63,20 @@ def getPolls():
 def get_connect():
     print("Client connected")
 
-def getPollData(pollId):
+def getPollData(pollId, userId):
+    # Check if user has any votes for poll
+    latestVote = 0.5
+    latestVoteQuery = database.session.query(database.Vote).\
+        filter_by(pollId=pollId).\
+        filter_by(userId=userId).order_by(database.Vote.created).first()
+    if latestVoteQuery:
+        latestVote = latestVoteQuery.value
+    #
     pollObject = database.session.query(database.Poll).filter_by(publicId=pollId).one()
     pollJson = {
         'name': pollObject.name,
         'options': pollObject.options,
+        'latestVote': latestVote,
     }
     return pollJson
 
@@ -84,9 +99,9 @@ def on_join(data):
     pollId = data['pollId']
     join_room(pollId)
     currentUser = request.sid
-    emit('updatePollDetails', getPollData(pollId), to=currentUser, json=True)
+    emit('updatePollDetails', getPollData(pollId, data['userId']), to=currentUser, json=True)
     emit('updateVotingDetails', database.getLatestVotes(pollId), to=currentUser, json=True)
     emit('updateAnalyticsDetails', database.getAverageVoteData(pollId), to=currentUser, json=True)
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True)
+    socketio.run(app, debug=True, log_output=True)

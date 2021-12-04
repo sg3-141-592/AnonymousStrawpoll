@@ -58,7 +58,6 @@ export default {
     },
     methods: {
         sliderChanged: function () {
-            console.log(this.slider)
             this.$socket.emit('vote', {
                 value: this.slider,
                 pollId: this.$route.params.id,
@@ -71,7 +70,8 @@ export default {
             console.log("SocketIO connected")
         },
         updatePollDetails: function(data) {
-            this.pollData = data
+            this.pollData = data,
+            this.slider = data.latestVote
         },
         updateVotingDetails: function(data) {
             this.votingData = data

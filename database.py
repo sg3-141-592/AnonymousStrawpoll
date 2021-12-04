@@ -2,6 +2,7 @@ from sqlalchemy import create_engine, Column, String, Integer, JSON, DateTime, F
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import func
+import logging
 import datetime
 import pandas as pd
 import numpy as np
@@ -29,14 +30,6 @@ class Vote(Base):
     userId = Column(String, index=True)
     created = Column(DateTime(timezone=True), default=datetime.datetime.utcnow)
 
-# class Analytics(Base):
-#     __tablename__ = 'analytics'
-
-#     id = Column(Integer, primary_key=True)
-#     pollId = Column(Integer, ForeignKey('polls.publicId'), index=True)
-#     value = Column(JSON())
-
-
 Base.metadata.create_all(engine)
 
 # Create a session
@@ -44,7 +37,8 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 def getResamplingInterval(interval):
-    return (interval/10).round(datetime.timedelta(seconds=30))
+    # TODO: Add some proper rounding behaviour here
+    return interval/10
 
 """
 Get the votes over time for the poll
@@ -64,14 +58,27 @@ def getAverageVoteData(pollId):
             'x': item[2]
         })
     
+    if len(averageData) == 0:
+        return [{
+            'x': datetime.datetime.utcnow().timestamp(),
+            'y': 0
+        }]
+    
     # Resample data
     df = pd.DataFrame(averageData)
     
     # Get the length of our dataset to work out resampling interval
     interval = df["x"].max() - df["x"].min()
+    print("Interval", interval)
+    # Add handling for an interval of 1
+    if interval <= datetime.timedelta(seconds=1):
+        return {
+            'x': datetime.datetime.timestamp(df["x"][0]),
+            'y': df["y"][0],
+        }
     
     df = df.set_index('x')
-
+    print("Resampling interval", getResamplingInterval(interval))
     resampled = df.resample(getResamplingInterval(interval), label='right').mean().dropna()
     outputData = []
     for index, row in resampled.iterrows():
@@ -79,10 +86,6 @@ def getAverageVoteData(pollId):
             'x' : datetime.datetime.timestamp(index),
             'y' : row['y']
         })
-    
-    # Calculate polynomial regression
-    # npData = df.to_numpy()
-    # print(np.polyfit(npData[0], npData[1], deg=2))
     
     return outputData
 
@@ -109,34 +112,3 @@ def getLatestVotes(pollId):
         votes.append(item.value)
     
     return votes
-
-# averageData = []
-# latestVote = {}
-# for item in session.query(Vote.userId, Vote.value, Vote.created).filter_by(pollId='woolly-peach-fousek'):
-#         latestVote[item[0]] = item[1]
-#         average = 0
-#         for user in latestVote.keys():
-#             average += latestVote[user]
-#         average /= len(latestVote.keys())
-#         averageData.append({
-#             'y': average,
-#             'x': item[2] #datetime.datetime.timestamp(item[2])
-#         })
-
-# df = pd.DataFrame(averageData)
-# df = df.set_index('x')
-# resampled = df.resample('60S', label='right').mean().dropna()
-# outputData = []
-# for index, row in resampled.iterrows():
-#     outputData.append({
-#         'x' : datetime.datetime.timestamp(index),
-#         'y' : row['y']
-#     })
-# print(outputData)
-# # df = pd.read_sql(query.statement, session.bind)
-# # df = df.set_index('created')
-
-# resampled = df.resample('60S', label='right').mean().dropna()
-
-
-# print(resampled.to_json(orient="table"))

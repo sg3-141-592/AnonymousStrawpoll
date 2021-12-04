@@ -11,7 +11,7 @@ const app = createApp(App)
 app.use(router)
 app.use(store)
 app.use(new VueSocketIO({
-    debug: true,
+    debug: false,
     connection: '',
     vuex: {
         store,
