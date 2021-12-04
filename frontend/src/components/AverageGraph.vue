@@ -5,7 +5,6 @@
 <script>
 import Chart from 'chart.js/auto';
 import 'chartjs-adapter-date-fns';
-import regression from 'regression';
 
 var data = {
   datasets: [{
@@ -21,6 +20,11 @@ var config = {
   data: data,
   options: {
       parsing: false,
+      plugins: {
+          legend: {
+              display: false
+          }
+      },    
       scales: {
           x: {
                 display: "true",
@@ -60,9 +64,6 @@ export default {
             fill: false,
             borderColor: 'red'
         }]
-
-        console.log(regression.polynomial(this.chartData, { order: 2 }))
-        
         this.myChart = new Chart(
             document.getElementById('myChart'),
             config

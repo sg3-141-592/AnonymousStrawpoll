@@ -3,7 +3,7 @@
 
         <header class="card-header">
             <p class="card-header-title">
-                Create Poll
+                Create New Poll
             </p>
         </header>
 

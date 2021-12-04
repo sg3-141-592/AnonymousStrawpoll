@@ -1,4 +1,6 @@
 <template>
+    <share-poll :url="this.$route.params.id"></share-poll>
+    <br>
     <div v-if="pollData != null">
         <h1 class="title has-text-centered">{{ pollData.name }}</h1>
         <div>
@@ -18,6 +20,7 @@
             </span>
         </div>
     </div>
+    <br>
     <div v-if="analyticsData != null">
         <average-graph :chartData="analyticsData" :axisLabels="{one:pollData.options.one, two:pollData.options.two}"/>
     </div>
@@ -26,10 +29,12 @@
 <script>
 import store from '../store'
 import AverageGraph from '../components/AverageGraph.vue'
+import SharePoll from  '../components/SharePoll.vue'
 
 export default {
     components: {
-        AverageGraph
+        AverageGraph,
+        SharePoll
     },
     mounted() {
         this.$socket.emit('join', {

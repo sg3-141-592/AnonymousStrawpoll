@@ -43,6 +43,9 @@ Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 session = Session()
 
+def getResamplingInterval(interval):
+    return (interval/10).round(datetime.timedelta(seconds=30))
+
 """
 Get the votes over time for the poll
 """
@@ -63,8 +66,13 @@ def getAverageVoteData(pollId):
     
     # Resample data
     df = pd.DataFrame(averageData)
+    
+    # Get the length of our dataset to work out resampling interval
+    interval = df["x"].max() - df["x"].min()
+    
     df = df.set_index('x')
-    resampled = df.resample('60S', label='right').mean().dropna()
+
+    resampled = df.resample(getResamplingInterval(interval), label='right').mean().dropna()
     outputData = []
     for index, row in resampled.iterrows():
         outputData.append({
@@ -73,8 +81,8 @@ def getAverageVoteData(pollId):
         })
     
     # Calculate polynomial regression
-    npData = df.to_numpy()
-    print(np.polyfit(npData[0], npData[1], deg=2))
+    # npData = df.to_numpy()
+    # print(np.polyfit(npData[0], npData[1], deg=2))
     
     return outputData
 

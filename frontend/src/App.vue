@@ -1,13 +1,13 @@
 <template>
-  <section class="hero is-link is-small">
+  <section class="hero is-small">
     <div class="hero-body">
       <p class="title">
         <span class="icon-text">
           <span class="icon">
-            <i class="fas fa-info-circle"></i>
+            <i class="fas fa-bolt"></i>
           </span>
           <span>
-            <router-link to="/">Anon Strawpoll</router-link>
+            <router-link to="/">Live Strawpoll</router-link>
           </span>
         </span>
       </p>

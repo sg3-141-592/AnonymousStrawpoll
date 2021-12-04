@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    Anonymously get feedback on how people are feeling. Track how peoples opinions change over time.
     <create-poll/>
     <generate-user-id/>
     <view-polls/>
