@@ -4,7 +4,7 @@
         <br>
         <div class="field has-addons">
             <div class="control is-expanded">
-                <input class="input is-info" :value="url" type="text" disabled>
+                <input class="input is-info" :value="fullUrl" type="text" disabled>
             </div>
             <div class="control">
                 <button class="button is-info">
@@ -20,6 +20,11 @@
 
 <script>
 export default {
-    props: ['url']
+    props: ['url'],
+    computed: {
+        fullUrl: function () {
+            return window.location.href + this.url
+        }
+    }
 }
 </script>

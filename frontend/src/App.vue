@@ -7,13 +7,13 @@
             <i class="fas fa-bolt"></i>
           </span>
           <span>
-            <router-link to="/">Live Strawpoll</router-link>
+            <router-link to="/" class="has-text-black">Live Strawpoll</router-link>
           </span>
         </span>
       </p>
     </div>
   </section>
-  <section class="section">
+  <section class="section pt-1 pb-1">
     <router-view/>
   </section>
 </template>

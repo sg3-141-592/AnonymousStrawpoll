@@ -1,9 +1,10 @@
 <template>
   <div class="home">
-    Anonymously get feedback on how people are feeling. Track how peoples opinions change over time.
+    <p>Get live anonymous feedback. Track sentiment. Make decisions based on data.</p>
+    <br>
+    <view-polls/>
     <create-poll/>
     <generate-user-id/>
-    <view-polls/>
   </div>
 </template>
 

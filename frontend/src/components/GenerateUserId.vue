@@ -1,5 +1,7 @@
 <template>
-    GeneratingToken: {{ token }}
+    <div>
+    <!-- GeneratingToken: {{ token }} -->
+    </div>
 </template>
 
 <script>

@@ -1,23 +1,37 @@
 <template>
     <share-poll :url="this.$route.params.id"></share-poll>
-    <br>
     <div v-if="pollData != null">
         <h1 class="title has-text-centered">{{ pollData.name }}</h1>
+        <!-- Alternative Layout -->
         <div>
-            <span class="icon-text">
-                <span class="icon">
-                    <i :class="`fas ${ pollData.options.oneEmoji }`"></i>
-                </span>
-                <span>{{ pollData.options.one }}</span>
-            </span>&nbsp;
-            <input v-model="slider" type="range"
-                min="0" max="1" step="0.01" @change="sliderChanged">&nbsp;
-            <span class="icon-text">
-                <span class="icon">
-                    <i :class="`fas ${ pollData.options.twoEmoji }`"></i>
-                </span>
-                <span>{{ pollData.options.two }}</span>
-            </span>
+            <table width=100%>
+                <tr>
+                    <td width=50%>
+                        <span class="icon-text">
+                            <span class="icon">
+                                <i :class="`fas ${ pollData.options.oneEmoji }`"></i>
+                            </span>
+                            <span>{{ pollData.options.one }}</span>
+                        </span>
+                    </td>
+                    <td width=50% class="has-text-right">
+                        <span class="icon-text">
+                            <span class="icon">
+                                <i :class="`fas ${ pollData.options.twoEmoji }`"></i>
+                            </span>
+                            <span>{{ pollData.options.two }}</span>
+                        </span>
+                    </td>
+                </tr>
+            </table>
+            <table width=100%>
+                <tr>
+                    <td class="has-text-centered" width=100%>
+                        <input style="width: 100%;" v-model="slider" type="range"
+                            min="0" max="1" step="0.01" @change="sliderChanged">
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
     <br>
