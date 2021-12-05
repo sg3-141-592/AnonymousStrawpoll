@@ -12,7 +12,7 @@ app.use(router)
 app.use(store)
 app.use(new VueSocketIO({
     debug: false,
-    connection: '',
+    connection: '/api/',
     vuex: {
         store,
         actionPrefix: 'SOCKET_',

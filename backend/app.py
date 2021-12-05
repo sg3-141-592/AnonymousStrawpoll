@@ -12,7 +12,9 @@ defaultLogger = logging.basicConfig(filename='errors.log', level=logging.INFO)
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
 
-@app.route('/createPoll', methods=['POST'])
+URL_SUBFOLDER = '/api'
+
+@app.route(URL_SUBFOLDER+'/createPoll', methods=['POST'])
 def createPoll():
     data = request.json
     publicId = random_name.generate_name()
@@ -42,7 +44,7 @@ def createPoll():
 """
 Get a list of polls for a particular user
 """
-@app.route('/getPolls', methods=['GET'])
+@app.route(URL_SUBFOLDER+'/getPolls', methods=['GET'])
 def getPolls():
     userId = request.args.get('userId')
     print(userId)

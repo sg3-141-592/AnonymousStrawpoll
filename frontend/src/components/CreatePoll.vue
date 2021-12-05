@@ -51,7 +51,7 @@ export default {
                 'Content-Type': 'application/json'
             });
 
-            fetch(`/createPoll`, {
+            fetch(`/api/createPoll`, {
                 method: 'POST',
                 headers: headers,
                 body: JSON.stringify({

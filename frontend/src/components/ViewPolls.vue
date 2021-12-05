@@ -14,7 +14,7 @@ import store from '../store'
 
 export default {
     mounted() {
-        fetch(`/getPolls?userId=${store.state.token}`, {
+        fetch(`/api/getPolls?userId=${store.state.token}`, {
             method: 'GET'
         })
             .then(response => response.json())
