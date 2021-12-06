@@ -7,7 +7,7 @@ import datetime
 import pandas as pd
 import numpy as np
 
-engine = create_engine('sqlite:///data.db', connect_args={"check_same_thread": False}, echo=False)
+engine = create_engine('sqlite:///database/data.db', connect_args={"check_same_thread": False}, echo=False)
 
 Base = declarative_base()
 

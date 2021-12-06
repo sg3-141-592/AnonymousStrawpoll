@@ -1,9 +1,22 @@
 services:
   frontend:
     build: ./frontend
+    networks:
+      - backbone
     ports:
       - 8080:8080
+    depends_on:
+      - backend
   backend:
     build: ./backend
+    networks:
+      - backbone
     ports:
       - 8000:8000
+    volumes:
+      - databasevol:/database
+networks:
+  backbone:
+    driver: bridge
+volumes:
+  databasevol:
