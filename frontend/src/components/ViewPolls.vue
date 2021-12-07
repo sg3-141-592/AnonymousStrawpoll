@@ -1,6 +1,6 @@
 <template>
-    <p>Your polls</p>
-    <div v-if="pollList != null" class="content">
+    <div v-if="pollList != null && pollList.length > 0" class="content">
+        <p>Your polls</p>
         <ul>
             <li v-for="poll in pollList" :key="poll.url">
                 <router-link :to="{ name: 'ViewPoll', params: { 'id': poll.url } }">{{ poll.name }}</router-link>
