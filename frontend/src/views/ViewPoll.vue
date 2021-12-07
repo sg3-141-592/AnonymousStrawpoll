@@ -74,9 +74,6 @@ export default {
             this.pollData = data,
             this.slider = data.latestVote
         },
-        updateVotingDetails: function(data) {
-            this.votingData = data
-        },
         updateAnalyticsDetails: function(data) {
             this.analyticsData = data.averageData,
             this.userCount = data.userCount
@@ -85,7 +82,6 @@ export default {
     data() {
         return {
             pollData: null,
-            votingData: null,
             analyticsData: null,
             slider: 0.50,
             userCount: 0,
