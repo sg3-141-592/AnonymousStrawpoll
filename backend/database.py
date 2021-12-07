@@ -1,22 +1,13 @@
-from sqlalchemy import (
-    create_engine,
-    Column,
-    String,
-    Integer,
-    JSON,
-    DateTime,
-    ForeignKey,
-    Float,
-    func,
-    and_,
-)
+import datetime
+import logging
+
+import numpy as np
+import pandas as pd
+from sqlalchemy import (JSON, Column, DateTime, Float, ForeignKey, Integer,
+                        String, and_, create_engine, func)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import func
-import logging
-import datetime
-import pandas as pd
-import numpy as np
 
 engine = create_engine(
     "sqlite:///database/data.db", connect_args={"check_same_thread": False}, echo=False

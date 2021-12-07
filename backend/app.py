@@ -1,10 +1,11 @@
-from flask import Flask, request, json, Response
-from flask_socketio import SocketIO, join_room, emit
 import logging
-import random_name
-import database
 
 import eventlet
+import random_name
+from flask import Flask, Response, json, request
+from flask_socketio import SocketIO, emit, join_room
+
+import database
 
 eventlet.monkey_patch()
 
