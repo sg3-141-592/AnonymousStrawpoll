@@ -11,8 +11,6 @@ services:
     build: ./backend
     networks:
       - backbone
-    ports:
-      - 8000:8000
     volumes:
       - databasevol:/database
 networks:
