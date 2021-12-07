@@ -79,7 +79,6 @@ def getPollData(pollId, userId):
     )
     if latestVoteQuery:
         latestVote = latestVoteQuery.value
-    #
     pollObject = database.session.query(database.Poll).filter_by(publicId=pollId).one()
     pollJson = {
         "name": pollObject.name,

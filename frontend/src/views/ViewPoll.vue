@@ -1,9 +1,10 @@
 <template>
     <share-poll :url="this.$route.params.id"></share-poll>
     <div v-if="pollData != null">
-        <h1 class="title has-text-centered">{{ pollData.name }}</h1>
+        <h1 class="title has-text-centered mb-0">{{ pollData.name }}</h1>
+        <p><i class="fas fa-user"></i> {{ userCount }} users</p>
         <!-- Alternative Layout -->
-        <div>
+        <div class="pt-3">
             <table width=100%>
                 <tr>
                     <td width=50%>
@@ -77,7 +78,8 @@ export default {
             this.votingData = data
         },
         updateAnalyticsDetails: function(data) {
-            this.analyticsData = data
+            this.analyticsData = data.averageData,
+            this.userCount = data.userCount
         }
     },
     data() {
@@ -85,7 +87,8 @@ export default {
             pollData: null,
             votingData: null,
             analyticsData: null,
-            slider: 0.50
+            slider: 0.50,
+            userCount: 0,
         }
     }
 }

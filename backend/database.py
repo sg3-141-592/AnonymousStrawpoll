@@ -50,6 +50,9 @@ def getResamplingInterval(interval):
     # TODO: Add some proper rounding behaviour here
     return interval / 20
 
+def getUserCount(pollId):
+    result = session.query(Vote.userId).filter_by(pollId=pollId).distinct().count()
+    return result
 
 """
 Get the votes over time for the poll
@@ -89,9 +92,13 @@ def getAverageVoteData(pollId):
     resampled = (
         df.resample(getResamplingInterval(interval), label="right").mean().dropna()
     )
-    outputData = []
+    outputData = {
+        'averageData' : []
+    }
     for index, row in resampled.iterrows():
-        outputData.append({"x": datetime.datetime.timestamp(index), "y": row["y"]})
+        outputData["averageData"].append({"x": datetime.datetime.timestamp(index), "y": row["y"]})
+    
+    outputData["userCount"] = getUserCount(pollId)
 
     return outputData
 
