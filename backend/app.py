@@ -1,13 +1,12 @@
-import logging
-
 import eventlet
+eventlet.monkey_patch()
+
+import logging
 import random_name
 from flask import Flask, Response, json, request
 from flask_socketio import SocketIO, emit, join_room
 
 import database
-
-eventlet.monkey_patch()
 
 defaultLogger = logging.basicConfig(filename="errors.log", level=logging.INFO)
 
@@ -123,12 +122,6 @@ def on_join(data):
         json=True,
     )
     emit(
-        "updateVotingDetails",
-        database.getLatestVotes(pollId),
-        to=currentUser,
-        json=True,
-    )
-    emit(
         "updateAnalyticsDetails",
         database.getAverageVoteData(pollId),
         to=currentUser,
@@ -137,4 +130,4 @@ def on_join(data):
 
 
 if __name__ == "__main__":
-    socketio.run(app, debug=True, log_output=True)
+    socketio.run(app, debug=False, log_output=True)
