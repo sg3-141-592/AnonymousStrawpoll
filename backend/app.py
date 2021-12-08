@@ -50,15 +50,7 @@ Get a list of polls for a particular user
 @app.route(URL_SUBFOLDER + "/getPolls", methods=["GET"])
 def getPolls():
     userId = request.args.get("userId")
-    polls = (
-        database.session.query(database.Poll)
-        .filter_by(userId=userId)
-        .order_by(database.Poll.created.desc())
-    )
-    pollList = []
-    for pollObject in polls:
-        pollList.append({"name": pollObject.name, "url": pollObject.publicId})
-    return Response(json.dumps(pollList), status=200, mimetype="application/json")
+    return Response(json.dumps(database.getUsersPolls(userId)), status=200, mimetype="application/json")
 
 
 @socketio.on("connect")

@@ -100,6 +100,27 @@ def getAverageVoteData(pollId):
 
     return outputData
 
+"""
+
+"""
+def getUsersPolls(userId):
+    subq = (
+        session.query(Vote.pollId)
+        .filter_by(userId=userId)
+        .distinct(Vote.pollId)
+        .subquery()
+    )
+
+    votedPolls = session.query(Poll.name, Poll.publicId).join(subq, subq.c.pollId == Poll.publicId)
+
+    createdPolls = session.query(Poll.name, Poll.publicId).filter_by(userId=userId)
+
+    q = createdPolls.union(votedPolls)
+
+    pollList = []
+    for pollObject in q:
+        pollList.append({"name": pollObject.name, "url": pollObject.publicId})
+    return pollList
 
 """
 Get the latest votes for all of the users on a poll
