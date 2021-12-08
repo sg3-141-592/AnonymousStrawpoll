@@ -79,7 +79,6 @@ def getAverageVoteData(pollId):
 
     # Get the length of our dataset to work out resampling interval
     interval = df["x"].max() - df["x"].min()
-    print("Interval", interval)
     # Add handling for an interval of 1
     if interval <= datetime.timedelta(seconds=1):
         return {
@@ -88,7 +87,6 @@ def getAverageVoteData(pollId):
         }
 
     df = df.set_index("x")
-    print("Resampling interval", getResamplingInterval(interval))
     resampled = (
         df.resample(getResamplingInterval(interval), label="right").mean().dropna()
     )
