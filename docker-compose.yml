@@ -1,10 +1,11 @@
+version: "2.4"
 services:
   frontend:
     build: ./frontend
     networks:
       - backbone
     ports:
-      - 8080:8080
+      - 443:443
     depends_on:
       - backend
   backend:
