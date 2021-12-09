@@ -16,21 +16,24 @@ var data = {
 };
 
 var config = {
-  type: 'line',
   data: data,
   options: {
+      animation: {
+        duration: 0
+      },
       parsing: false,
       plugins: {
           legend: {
               display: false
           }
-      },    
+      },
       scales: {
           x: {
                 display: "true",
                 type: "time",
                 ticks: {
                     source: 'auto',
+                    maxTicksLimit: 5
                 },
                 time: {
                     unit: 'second'
@@ -53,23 +56,36 @@ export default {
     methods: {
         updateGraph: function() {
             data.datasets[0].data = this.chartData
+            data.datasets[1].data = this.latestPoints
             this.myChart.update()
         }
     },
     mounted() {
         config.options.scales.y.title.text = `${this.axisLabels.one} - ${this.axisLabels.two}`;
         data.datasets = [{
+            type: 'line',
+            pointRadius: 0,
             label: 'Average Vote',
             data: this.chartData,
             fill: false,
             borderColor: 'red'
+        },
+        {
+            type: 'scatter',
+            label: 'Latest Points',
+            data: this.latestPoints,
+            fill: false,
+            borderColor: 'grey',
+            borderWidth: 1,
+            pointRadius: 5,
+            pointStyle: "cross",
         }]
         this.myChart = new Chart(
             document.getElementById('myChart'),
             config
         );
     },
-    props: ['chartData', 'axisLabels'],
+    props: ['chartData', 'axisLabels', 'latestPoints'],
     watch: {
         chartData: function() {
           this.updateGraph()

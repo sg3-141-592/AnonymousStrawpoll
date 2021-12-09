@@ -112,6 +112,7 @@ def on_join(data):
         to=currentUser,
         json=True,
     )
+    # 
     emit(
         "updateAnalyticsDetails",
         database.getAverageVoteData(pollId),
@@ -121,4 +122,4 @@ def on_join(data):
 
 
 if __name__ == "__main__":
-    socketio.run(app, debug=False, log_output=True)
+    socketio.run(app, debug=True, log_output=True)

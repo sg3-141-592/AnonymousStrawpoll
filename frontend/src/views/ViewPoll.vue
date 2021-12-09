@@ -1,7 +1,7 @@
 <template>
     <share-poll :url="this.$route.params.id"></share-poll>
     <div v-if="pollData != null">
-        <h1 class="title has-text-centered mb-0">{{ pollData.name }}</h1>
+        <h1 class="title has-text-centered mb-2">{{ pollData.name }}</h1>
         <p><i class="fas fa-user"></i> {{ userCount }} users</p>
         <!-- Alternative Layout -->
         <div class="pt-3">
@@ -37,7 +37,20 @@
     </div>
     <br>
     <div v-if="analyticsData != null">
-        <average-graph :chartData="analyticsData" :axisLabels="{one:pollData.options.one, two:pollData.options.two}"/>
+        <average-graph :chartData="analyticsData" :latestPoints="latestPoints" :axisLabels="{one:pollData.options.one, two:pollData.options.two}"/>
+    </div>
+    <div class="notification is-info is-light">
+        <p class="mb-2">Try creating your own poll</p>
+        <div class="field">
+            <div class="control">
+                <button  @click="$router.push({name: 'Home'})" class="button is-info">
+                    <span class="icon">
+                        <i class="fas fa-plus"></i>
+                    </span>
+                    <span>Create</span>
+                </button>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -76,13 +89,15 @@ export default {
         },
         updateAnalyticsDetails: function(data) {
             this.analyticsData = data.averageData,
-            this.userCount = data.userCount
+            this.userCount = data.userCount,
+            this.latestPoints = data.latestPoints
         }
     },
     data() {
         return {
             pollData: null,
             analyticsData: null,
+            latestPoints: null,
             slider: 0.50,
             userCount: 0,
         }

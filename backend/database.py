@@ -1,5 +1,6 @@
 import datetime
 import logging
+import time
 
 import numpy as np
 import pandas as pd
@@ -58,6 +59,10 @@ def getUserCount(pollId):
 Get the votes over time for the poll
 """
 def getAverageVoteData(pollId):
+    # Temporary Benchmarking Code
+    start = time.time()
+
+    #
     averageData = []
     latestVote = {}
 
@@ -97,11 +102,14 @@ def getAverageVoteData(pollId):
         outputData["averageData"].append({"x": datetime.datetime.timestamp(index), "y": row["y"]})
     
     outputData["userCount"] = getUserCount(pollId)
+    outputData["latestPoints"] = getLatestVotes(pollId) #getLatestPoints(pollId)
+
+    print("Analytics time: ", time.time() - start)
 
     return outputData
 
 """
-
+Get a list of polls the user has created or voted in
 """
 def getUsersPolls(userId):
     subq = (
@@ -123,6 +131,19 @@ def getUsersPolls(userId):
     return pollList
 
 """
+Get the latest points for a poll
+"""
+def getLatestPoints(pollId):
+    q = session.query(Vote.value, Vote.created).filter_by(pollId=pollId).order_by(Vote.created.desc()).limit(10)
+    latestPoints = []
+    for point in q:
+        latestPoints.append({
+            'x': datetime.datetime.timestamp(point.created),
+            'y': point.value
+        })
+    return latestPoints
+
+"""
 Get the latest votes for all of the users on a poll
 """
 def getLatestVotes(pollId):
@@ -134,10 +155,13 @@ def getLatestVotes(pollId):
         .subquery()
     )
 
-    q = session.query(Vote).join(subq, subq.c.id == Vote.id)
+    q = session.query(Vote.value, Vote.created).join(subq, subq.c.id == Vote.id)
 
     votes = []
-    for item in q:
-        votes.append(item.value)
+    for point in q:
+        votes.append({
+            'x': datetime.datetime.timestamp(point.created),
+            'y': point.value
+        })
 
     return votes
