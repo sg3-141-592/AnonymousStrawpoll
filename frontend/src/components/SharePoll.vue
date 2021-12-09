@@ -1,7 +1,6 @@
 <template>
     <div class="notification is-info is-light">
-        <p>Invite others to join your poll</p>
-        <br>
+        <p class="mb-2">Invite others to join your poll</p>
         <div class="field has-addons">
             <div class="control is-expanded">
                 <input class="input is-info" :value="fullUrl" type="text" readonly ref="shareLink">

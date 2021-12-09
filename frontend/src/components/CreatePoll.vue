@@ -9,7 +9,7 @@
     <div class="field">
         <label class="label">Option A</label>
         <div class="control">
-            <input v-model="optionOne" class="input" type="text" placeholder="Let's do it">
+            <input v-model="optionOne" class="input" type="text" placeholder="Let's do it" maxlength="60">
         </div>
     </div>
 
@@ -20,7 +20,7 @@
     <div class="field">
         <label class="label">Option B</label>
         <div class="control">
-            <input v-model="optionTwo" class="input" type="text" placeholder="Let's hold off">
+            <input v-model="optionTwo" class="input" type="text" placeholder="Let's hold off" maxlength="60">
         </div>
     </div>
 

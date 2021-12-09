@@ -1,14 +1,15 @@
 import eventlet
 eventlet.monkey_patch()
 
-import logging
+from datetime import datetime
+from random import randint, seed
 import random_name
 from flask import Flask, Response, json, request
 from flask_socketio import SocketIO, emit, join_room
 
 import database
 
-defaultLogger = logging.basicConfig(filename="errors.log", level=logging.INFO)
+seed(datetime.now())
 
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode="eventlet")
@@ -21,7 +22,7 @@ Create new poll
 @app.route(URL_SUBFOLDER + "/createPoll", methods=["POST"])
 def createPoll():
     data = request.json
-    publicId = random_name.generate_name()
+    publicId = "{}-{}".format(random_name.generate_name(),randint(0,999))
 
     newPoll = database.Poll(
         name=data["pollName"],
@@ -49,16 +50,7 @@ Get a list of polls for a particular user
 @app.route(URL_SUBFOLDER + "/getPolls", methods=["GET"])
 def getPolls():
     userId = request.args.get("userId")
-    print(userId)
-    polls = (
-        database.session.query(database.Poll)
-        .filter_by(userId=userId)
-        .order_by(database.Poll.created.desc())
-    )
-    pollList = []
-    for pollObject in polls:
-        pollList.append({"name": pollObject.name, "url": pollObject.publicId})
-    return Response(json.dumps(pollList), status=200, mimetype="application/json")
+    return Response(json.dumps(database.getUsersPolls(userId)), status=200, mimetype="application/json")
 
 
 @socketio.on("connect")
@@ -95,7 +87,6 @@ def vote(data):
     database.session.add(newVote)
     database.session.commit()
 
-    print("Vote update")
     emit(
         "updateVotingDetails",
         database.getLatestVotes(data["pollId"]),
@@ -121,6 +112,7 @@ def on_join(data):
         to=currentUser,
         json=True,
     )
+    # 
     emit(
         "updateAnalyticsDetails",
         database.getAverageVoteData(pollId),
@@ -130,4 +122,4 @@ def on_join(data):
 
 
 if __name__ == "__main__":
-    socketio.run(app, debug=False, log_output=True)
+    socketio.run(app, debug=True, log_output=True)
