@@ -7,7 +7,7 @@
         <div class="pt-3">
             <table width=100%>
                 <tr>
-                    <td width=50%>
+                    <td width=50% class="optionsText">
                         <span class="icon-text">
                             <span class="icon">
                                 <i :class="`fas ${ pollData.options.oneEmoji }`"></i>
@@ -15,7 +15,7 @@
                             <span>{{ pollData.options.one }}</span>
                         </span>
                     </td>
-                    <td width=50% class="has-text-right">
+                    <td width=50% class="has-text-right optionsText">
                         <span class="icon-text">
                             <span class="icon">
                                 <i :class="`fas ${ pollData.options.twoEmoji }`"></i>
@@ -110,5 +110,9 @@ export default {
         width: 70%;
         text-align: center;
         vertical-align: bottom;
+    }
+
+    .optionsText {
+        word-break: break-word;
     }
 </style>

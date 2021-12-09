@@ -48,8 +48,10 @@ session = Session()
 
 
 def getResamplingInterval(interval):
-    # TODO: Add some proper rounding behaviour here
-    return interval / 20
+    dividedInterval = interval / 15
+    return dividedInterval.round(datetime.timedelta(
+        seconds = 15
+    ))
 
 def getUserCount(pollId):
     result = session.query(Vote.userId).filter_by(pollId=pollId).distinct().count()
@@ -59,10 +61,7 @@ def getUserCount(pollId):
 Get the votes over time for the poll
 """
 def getAverageVoteData(pollId):
-    # Temporary Benchmarking Code
-    start = time.time()
 
-    #
     averageData = []
     latestVote = {}
 
@@ -75,36 +74,39 @@ def getAverageVoteData(pollId):
             average += latestVote[user]
         average /= len(latestVote.keys())
         averageData.append({"y": average, "x": item[2]})
-
-    if len(averageData) == 0:
-        return [{"x": datetime.datetime.utcnow().timestamp(), "y": 0.5}]
-
-    # Resample data
-    df = pd.DataFrame(averageData)
-
-    # Get the length of our dataset to work out resampling interval
-    interval = df["x"].max() - df["x"].min()
-    # Add handling for an interval of 1
-    if interval <= datetime.timedelta(seconds=1):
-        return {
-            "x": datetime.datetime.timestamp(df["x"][0]),
-            "y": df["y"][0],
-        }
-
-    df = df.set_index("x")
-    resampled = (
-        df.resample(getResamplingInterval(interval), label="right").mean().dropna()
-    )
+    
     outputData = {
         'averageData' : []
     }
-    for index, row in resampled.iterrows():
-        outputData["averageData"].append({"x": datetime.datetime.timestamp(index), "y": row["y"]})
+
+    if len(averageData) == 0:
+        outputData["averageData"].append({"x": datetime.datetime.utcnow().timestamp(), "y": 0.5})
+    elif len(averageData) < 10:
+        for row in averageData:
+            outputData["averageData"].append({
+                "x": datetime.datetime.timestamp(row["x"]),
+                "y": row["y"]
+            })
+    else:
+        # Resample data
+        df = pd.DataFrame(averageData)
+
+        # Get the length of our dataset to work out resampling interval
+        interval = df["x"].max() - df["x"].min()
+
+        df = df.set_index("x")
+        resampled = (
+            df.resample(getResamplingInterval(interval), label="right").mean().dropna()
+        )
+
+        # Remove the average point
+        resampled.drop(resampled.tail(1).index, inplace=True)
+
+        for index, row in resampled.iterrows():
+            outputData["averageData"].append({"x": datetime.datetime.timestamp(index), "y": row["y"]})
     
     outputData["userCount"] = getUserCount(pollId)
-    outputData["latestPoints"] = getLatestVotes(pollId) #getLatestPoints(pollId)
-
-    print("Analytics time: ", time.time() - start)
+    outputData["latestPoints"] = getLatestVotes(pollId)
 
     return outputData
 
@@ -129,19 +131,6 @@ def getUsersPolls(userId):
     for pollObject in q:
         pollList.append({"name": pollObject.name, "url": pollObject.publicId})
     return pollList
-
-"""
-Get the latest points for a poll
-"""
-def getLatestPoints(pollId):
-    q = session.query(Vote.value, Vote.created).filter_by(pollId=pollId).order_by(Vote.created.desc()).limit(10)
-    latestPoints = []
-    for point in q:
-        latestPoints.append({
-            'x': datetime.datetime.timestamp(point.created),
-            'y': point.value
-        })
-    return latestPoints
 
 """
 Get the latest votes for all of the users on a poll
