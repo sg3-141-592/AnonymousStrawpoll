@@ -49,9 +49,14 @@ session = Session()
 
 def getResamplingInterval(interval):
     dividedInterval = interval / 15
-    return dividedInterval.round(datetime.timedelta(
+    resamplingInterval = dividedInterval.round(datetime.timedelta(
         seconds = 15
     ))
+    if resamplingInterval > datetime.timedelta(seconds = 0):
+        return resamplingInterval
+    else:
+        return dividedInterval
+
 
 def getUserCount(pollId):
     result = session.query(Vote.userId).filter_by(pollId=pollId).distinct().count()
@@ -99,8 +104,10 @@ def getAverageVoteData(pollId):
             df.resample(getResamplingInterval(interval), label="right").mean().dropna()
         )
 
-        # Remove the average point
+        # Remove the latest average point
         resampled.drop(resampled.tail(1).index, inplace=True)
+        # Add the last latest average
+        resampled.loc[averageData[-1]['x']] = [ averageData[-1]['y'] ]
 
         for index, row in resampled.iterrows():
             outputData["averageData"].append({"x": datetime.datetime.timestamp(index), "y": row["y"]})

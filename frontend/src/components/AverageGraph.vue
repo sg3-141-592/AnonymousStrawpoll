@@ -64,6 +64,7 @@ export default {
         config.options.scales.y.title.text = `${this.axisLabels.one} - ${this.axisLabels.two}`;
         data.datasets = [{
             type: 'line',
+            borderDash: [15, 12],
             pointRadius: 0,
             label: 'Average Vote',
             data: this.chartData,

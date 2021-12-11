@@ -39,7 +39,7 @@
     <div v-if="analyticsData != null">
         <average-graph :chartData="analyticsData" :latestPoints="latestPoints" :axisLabels="{one:pollData.options.one, two:pollData.options.two}"/>
     </div>
-    <div class="notification is-info is-light">
+    <div class="notification is-info is-light mt-4">
         <p class="mb-2">Try creating your own poll</p>
         <div class="field">
             <div class="control">

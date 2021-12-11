@@ -1,6 +1,6 @@
 <template>
     <div>
-    <!-- GeneratingToken: {{ token }} -->
+    GeneratingToken: {{ token }}
     </div>
 </template>
 

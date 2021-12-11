@@ -65,7 +65,7 @@ def getPollData(pollId, userId):
         database.session.query(database.Vote)
         .filter_by(pollId=pollId)
         .filter_by(userId=userId)
-        .order_by(database.Vote.created)
+        .order_by(database.Vote.created.desc())
         .first()
     )
     if latestVoteQuery:
