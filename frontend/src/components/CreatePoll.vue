@@ -33,6 +33,12 @@
             <button class="button is-link" @click="createPoll()">Create</button>
         </div>
     </div>
+
+    <div class="pt-4" v-if="errorMessage.length > 0">
+        <div class="notification is-warning is-light">
+            <p v-for="error in errorMessage" :key="error">{{ error }}</p>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -46,6 +52,22 @@ export default {
     },
     methods: {
         createPoll: function () {
+            // Check if the different options have been populated
+            let newErrorMessage = []
+            if (this.pollName.length == 0) {
+                newErrorMessage.push("Poll must have a name")
+            }
+            if (this.optionOne.length == 0) {
+                newErrorMessage.push("Poll must have an Option A")
+            }
+            if (this.optionTwo.length == 0) {
+                newErrorMessage.push("Poll must have an Option B")
+            }
+            if (newErrorMessage.length > 0) {
+                this.errorMessage = newErrorMessage
+                return false;
+            }
+
             let headers = new Headers({
                 'Accept': 'application/json, text/plain, */*',
                 'Content-Type': 'application/json'
@@ -67,6 +89,8 @@ export default {
                 .then(data => router.push(
                     {name: 'ViewPoll', params: {id: data.id}}
                 ));
+            
+            return true
         }
     },
     data() {
@@ -76,6 +100,7 @@ export default {
             optionOneSelectedEmoji: "fa-atom",
             optionTwo: "",
             optionTwoSelectedEmoji: "fa-frown-open",
+            errorMessage: []
         }
     }
 }
