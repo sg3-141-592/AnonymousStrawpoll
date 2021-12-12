@@ -11,8 +11,10 @@ const app = createApp(App)
 app.use(router)
 app.use(store)
 app.use(new VueSocketIO({
-    debug: true,
+    debug: false,
     connection: '',
+    reconnection: true,
+    reconnectionDelay: 1000,
     vuex: {
         store,
         actionPrefix: 'SOCKET_',

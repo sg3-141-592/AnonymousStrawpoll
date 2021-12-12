@@ -25,7 +25,7 @@ import GenerateUserId from './components/GenerateUserId.vue'
 export default {
   components: {
     GenerateUserId
-  }
+  },
 }
 </script>
 
