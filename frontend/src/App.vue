@@ -15,14 +15,17 @@
   </section>
   <section class="section pt-1 pb-1">
     <router-view/>
+    <generate-user-id/>
   </section>
 </template>
 
 <script>
+import GenerateUserId from './components/GenerateUserId.vue'
+
 export default {
-  setup() {
-    
-  },
+  components: {
+    GenerateUserId
+  }
 }
 </script>
 

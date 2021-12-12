@@ -4,20 +4,17 @@
     <br>
     <view-polls/>
     <create-poll/>
-    <generate-user-id/>
   </div>
 </template>
 
 <script>
 import CreatePoll from '../components/CreatePoll.vue'
-import GenerateUserId from '../components/GenerateUserId.vue'
 import ViewPolls from '../components/ViewPolls.vue'
 
 export default {
   name: 'Home',
   components: {
     CreatePoll,
-    GenerateUserId,
     ViewPolls
   }
 }

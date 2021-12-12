@@ -124,7 +124,6 @@ def getUsersPolls(userId):
     subq = (
         session.query(Vote.pollId)
         .filter_by(userId=userId)
-        .distinct(Vote.pollId)
         .subquery()
     )
 
