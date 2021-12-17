@@ -2,8 +2,6 @@ config:
   target: "http://localhost:8080/api"
   http:
     extendedMetrics: true
-  tls:
-    rejectUnauthorized: false
   phases:
   - duration: 10
     arrivalRate: 1

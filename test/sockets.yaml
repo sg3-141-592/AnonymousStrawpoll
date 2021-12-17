@@ -1,0 +1,24 @@
+config:
+  target: "http://localhost:5000/socket.io/"
+  phases:
+    - duration: 10
+      arrivalRate: 1
+  ws:
+    subprotocols:
+    - json
+scenarios:
+  - name: Connect and view
+    engine: ws
+    flow:
+    - think: 10
+    - emit:
+        channel: "join"
+        data:
+          pollId: "bumpy-flax-ladybird-575"
+          userId: "THIS-IS-A-USER"
+        response:
+          channel: "join"
+          capture:
+            json: "$"
+            as: "res"
+    - log: "response={{res}}"
