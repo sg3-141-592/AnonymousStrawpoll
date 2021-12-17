@@ -8,3 +8,8 @@ docker run --name app-server -d -p 8000:8000 app-server
 docker compose build --force-rm
 docker compose up
 ```
+
+```
+artillery run -o results.json performance.yaml
+artillery report results.json
+```
