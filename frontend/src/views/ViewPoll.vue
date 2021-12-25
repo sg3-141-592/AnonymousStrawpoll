@@ -65,6 +65,7 @@ export default {
         SharePoll
     },
     mounted() {
+        this.analyticsData = null;
         this.$socket.emit('join', {
             pollId: this.$route.params.id,
             userId: store.state.token
