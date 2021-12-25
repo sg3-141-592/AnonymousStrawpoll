@@ -3,22 +3,15 @@ config:
   phases:
     - duration: 10
       arrivalRate: 1
-  ws:
-    subprotocols:
-    - json
+  engines:
+    socketio-v2: {}
 scenarios:
   - name: Connect and view
-    engine: ws
+    engine: socketio-v2
     flow:
-    - think: 10
+    - think: 11
     - emit:
-        channel: "join"
-        data:
-          pollId: "bumpy-flax-ladybird-575"
-          userId: "THIS-IS-A-USER"
-        response:
-          channel: "join"
-          capture:
-            json: "$"
-            as: "res"
-    - log: "response={{res}}"
+      channel: "join"
+      data:
+        pollId: "bumpy-flax-ladybird-575"
+        userId: "THIS-IS-A-USER"
