@@ -27,16 +27,14 @@ var config = {
               display: false
           }
       },
+      response: true,
       scales: {
           x: {
                 display: "true",
                 type: "time",
                 ticks: {
                     source: 'auto',
-                    maxTicksLimit: 5
-                },
-                time: {
-                    unit: 'second'
+                    maxTicksLimit: 10
                 },
           },
           y: {
@@ -55,12 +53,22 @@ var config = {
 export default {
     methods: {
         updateGraph: function() {
+            // We have to multiply incoming dates by 1000 as Javascript uses
+            // milliseconds since epoch instead of seconds
+            this.chartData.forEach((o) => o.x *= 1000)
+            this.latestPoints.forEach((o) => o.x *= 1000)
+            //
             data.datasets[0].data = this.chartData
             data.datasets[1].data = this.latestPoints
             this.myChart.update()
         }
     },
     mounted() {
+        // We have to multiply incoming dates by 1000 as Javascript uses
+        // milliseconds since epoch instead of seconds
+        this.chartData.forEach((o) => o.x *= 1000)
+        this.latestPoints.forEach((o) => o.x *= 1000)
+        //
         config.options.scales.y.title.text = `${this.axisLabels.one} - ${this.axisLabels.two}`;
         data.datasets = [{
             type: 'line',
@@ -85,6 +93,9 @@ export default {
             document.getElementById('myChart'),
             config
         );
+    },
+    unmounted() {
+        this.myChart.destroy()
     },
     props: ['chartData', 'axisLabels', 'latestPoints'],
     watch: {

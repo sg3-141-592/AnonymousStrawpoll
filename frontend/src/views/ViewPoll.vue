@@ -89,10 +89,6 @@ export default {
             this.slider = data.latestVote
         },
         updateAnalyticsDetails: function(data) {
-            // We have to multiply incoming dates by 1000 as Javascript uses
-            // milliseconds since epoch instead of seconds
-            data.averageData.forEach((o) => o.x *= 1000)
-            data.latestPoints.forEach((o) => o.x *= 1000)
             this.analyticsData = data.averageData,
             this.userCount = data.userCount,
             this.latestPoints = data.latestPoints
