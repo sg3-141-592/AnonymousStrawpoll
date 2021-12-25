@@ -1,4 +1,5 @@
 <template>
+    <select-poll-type/>
     <div class="field">
         <label class="label">Poll Name</label>
         <div class="control">
@@ -45,10 +46,12 @@
 import store from '../store'
 import router from '../router/index.js'
 import SelectEmoji from '../components/SelectEmoji.vue'
+import SelectPollType from '../components/SelectPollType.vue'
 
 export default {
     components: {
-        SelectEmoji
+        SelectEmoji,
+        SelectPollType
     },
     methods: {
         createPoll: function () {
