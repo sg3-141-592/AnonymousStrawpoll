@@ -11,7 +11,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import func
 
 engine = create_engine(
-    "sqlite:///database/data.db", connect_args={"check_same_thread": False}, echo=False
+    "sqlite:///database/data.db", connect_args={"check_same_thread": False}, echo=True
 )
 
 Base = declarative_base()
@@ -28,6 +28,7 @@ class Poll(Base):
         DateTime(timezone=True), default=datetime.datetime.utcnow, index=True
     )
     publicId = Column(String, index=True)
+    pollType = Column(String)
 
 
 class Vote(Base):

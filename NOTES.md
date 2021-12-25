@@ -28,6 +28,11 @@ group by pollId;
 ```
 
 ```
+Migration
+sqlite3 database/data.db < migrations/01-addPollTypeColumn.sql
+```
+
+```
 artillery run -o results.json performance.yaml
 artillery report results.json
 ```
