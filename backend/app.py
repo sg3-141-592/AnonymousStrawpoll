@@ -28,9 +28,9 @@ def createPoll():
         name=data["pollName"],
         options={
             "one": data["optionOne"],
-            "oneEmoji": data["optionOneEmoji"],
+            "oneEmoji": data["optionOneSelectedEmoji"],
             "two": data["optionTwo"],
-            "twoEmoji": data["optionTwoEmoji"],
+            "twoEmoji": data["optionTwoSelectedEmoji"],
         },
         userId=data["userId"],
         publicId=publicId,
