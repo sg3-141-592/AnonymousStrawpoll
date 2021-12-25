@@ -34,6 +34,7 @@ def createPoll():
         },
         userId=data["userId"],
         publicId=publicId,
+        pollType="SENTIMENT"
     )
 
     database.session.add(newPoll)
