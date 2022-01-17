@@ -2,7 +2,8 @@
     <div class="field">
         <div class="control">
             <label v-for="pollType in POLL_TYPES" :key="pollType" class="radio">
-                <input type="radio" name="foobar">
+                <input type="radio" name="foobar" :value="pollType" :id="pollType"
+                    @change="$emit('changed', pollType)">
                 {{ pollType }}
             </label>
         </div>

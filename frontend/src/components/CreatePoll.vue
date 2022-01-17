@@ -1,9 +1,9 @@
 <template>
-    <select-poll-type/>
-
-    {{ pollData }}
-    {{ errorMessages }}
-    <create-sentiment-poll @pollData="data => pollData = data" @errorMessages="data => errorMessages = data"/>
+    <select-poll-type @changed="data => pollType = data"/>
+    
+    <div v-if="pollType == 'Slider'">
+        <create-sentiment-poll @pollData="data => pollData = data" @errorMessages="data => errorMessages = data"/>
+    </div>
 
     <div class="field">
         <div class="control">
@@ -57,6 +57,7 @@ export default {
     data() {
         return {
             pollData: null,
+            pollType: "Slider",
             errorMessages: []
         }
     }
