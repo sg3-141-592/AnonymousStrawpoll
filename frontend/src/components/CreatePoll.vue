@@ -4,6 +4,9 @@
     <div v-if="pollType == 'Slider'">
         <create-sentiment-poll @pollData="data => pollData = data" @errorMessages="data => errorMessages = data"/>
     </div>
+    <div v-else-if="pollType == 'Traditional'">
+        <create-traditional-poll/>
+    </div>
 
     <div class="field">
         <div class="control">
@@ -23,11 +26,13 @@ import store from '../store'
 import router from '../router/index.js'
 import SelectPollType from '../components/SelectPollType.vue'
 import CreateSentimentPoll from '../components/CreateSentimentPoll.vue'
+import CreateTraditionalPoll from '../components/CreateTraditionalPoll.vue'
 
 export default {
     components: {
         SelectPollType,
-        CreateSentimentPoll
+        CreateSentimentPoll,
+        CreateTraditionalPoll
     },
     methods: {
         createPoll: function () {

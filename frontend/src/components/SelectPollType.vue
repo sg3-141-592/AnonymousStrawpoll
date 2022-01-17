@@ -1,9 +1,9 @@
 <template>
     <div class="field">
         <div class="control">
-            <label v-for="pollType in POLL_TYPES" :key="pollType" class="radio">
+            <label v-for="(pollType, index) in POLL_TYPES" :key="pollType" class="radio">
                 <input type="radio" name="foobar" :value="pollType" :id="pollType"
-                    @change="$emit('changed', pollType)">
+                    @change="$emit('changed', pollType)" :checked="index === 0">
                 {{ pollType }}
             </label>
         </div>
