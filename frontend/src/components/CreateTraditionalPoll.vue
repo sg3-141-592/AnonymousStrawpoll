@@ -6,10 +6,18 @@
                 placeholder="Poll Name">
         </div>
     </div>
+    <div class="field">
+        <select-emoji-text-box/>
+    </div>
 </template>
 
 <script>
+import SelectEmojiTextBox from '../components/SelectEmojiTextBox.vue'
+
 export default {
+    components: {
+        SelectEmojiTextBox
+    },
     data() {
         return {
             pollName: ""
