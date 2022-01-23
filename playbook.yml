@@ -9,7 +9,7 @@
 
     - name: Install required system packages
       apt: name={{ item }} state=latest update_cache=yes
-      loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools']
+      loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'git', 'python3-setuptools']
 
     - name: Add Docker GPG apt Key
       apt_key:
@@ -23,7 +23,30 @@
 
     - name: Update apt and install docker-ce
       apt: update_cache=yes name=docker-ce state=latest
-
+    
     - name: Install Docker Module for Python
       pip:
-        name: docker
+        name: docker-compose
+    
+    - name: Clone repo
+      ansible.builtin.git:
+        repo:  https://github.com/sg3-141-592/AnonymousStrawpoll.git
+        dest: /home/root/
+        version: doDeployment
+    
+    - name: Allow all access to tcp port 80
+      community.general.ufw:
+        rule: allow
+        port: '80'
+        proto: tcp
+    
+    - name: Install docker-compose from official github repo
+      get_url:
+        url : https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64
+        dest: /usr/local/bin/docker-compose
+        mode: 'u+x,g+x'
+    
+    - name: Docker compose start project
+      community.docker.docker_compose:
+        project_src: /home/root/
+      register: output
