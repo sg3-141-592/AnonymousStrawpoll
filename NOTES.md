@@ -31,3 +31,11 @@ group by pollId;
 artillery run -o results.json performance.yaml
 artillery report results.json
 ```
+
+```
+Install-Module -Name Az -Scope CurrentUser -Repository PSGallery -Force
+docker tag anonymousstrawpoll_backend livepollregistry.azurecr.io/livepoll/backend
+docker tag anonymousstrawpoll_frontend livepollregistry.azurecr.io/livepoll/frontend
+docker push livepollregistry.azurecr.io/livepoll/backend
+docker push livepollregistry.azurecr.io/livepoll/frontend
+```
