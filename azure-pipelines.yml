@@ -33,7 +33,7 @@ jobs:
   steps:
   - ${{each container in parameters.containerList}}:
     - task: Docker@2
-      displayName: Build $(container) container
+      displayName: Build ${{container}} container
       inputs:
         command: buildAndPush
         repository: ${{container}}
