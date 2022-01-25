@@ -52,6 +52,13 @@ def getPolls():
     userId = request.args.get("userId")
     return Response(json.dumps(database.getUsersPolls(userId)), status=200, mimetype="application/json")
 
+"""
+Basic ealth endpoint to help the azure app service
+"""
+@app.route(URL_SUBFOLDER + "/health", methods=["GET"])
+def getHealth():
+    # TODO: Add a basic database call here
+    return "OK", 200
 
 @socketio.on("connect")
 def get_connect():
