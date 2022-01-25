@@ -1,3 +1,10 @@
+**TODO**:
+- Make the database path configurable at runtime
+   - Provide a Sqlite mount onto Azure storage
+- Provide a SQL database
+- Provide a health endpoint for the app
+- Provide an Azure Pipeline to build the Container image
+- Provide an Azure Release Pipeline to update the App
 ```
 docker build -t web-server .
 docker run --name web-server -d -p 80:80 web-server

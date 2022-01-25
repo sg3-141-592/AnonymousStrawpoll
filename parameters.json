@@ -1,0 +1,18 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sites_livepollapp_name": {
+            "value": "AppName"
+        },
+        "serverfarms_livePollAppServicePlan_name": {
+            "value": "ServicePlanName"
+        },
+        "storageAccounts_livepollstorage_name": {
+            "value": "StorageName"
+        },
+        "registries_livepollregistry_name": {
+            "value": "DockerRegistryName"
+        }
+    }
+}
