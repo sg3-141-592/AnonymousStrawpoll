@@ -1,0 +1,1 @@
+[![Build Status](https://dev.azure.com/mrfoxsolutions/LivePollDeployment/_apis/build/status/sg3-141-592.AnonymousStrawpoll?branchName=main)](https://dev.azure.com/mrfoxsolutions/LivePollDeployment/_build/latest?definitionId=1&branchName=main)

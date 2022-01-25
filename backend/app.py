@@ -53,7 +53,7 @@ def getPolls():
     return Response(json.dumps(database.getUsersPolls(userId)), status=200, mimetype="application/json")
 
 """
-Basic ealth endpoint to help the azure app service
+Basic health endpoint to help the azure app service
 """
 @app.route(URL_SUBFOLDER + "/health", methods=["GET"])
 def getHealth():
