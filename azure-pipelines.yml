@@ -8,6 +8,13 @@ trigger:
 resources:
 - repo: self
 
+parameters:
+  - name: containerList
+    type: object
+    default:
+    - frontend
+    - backend
+
 variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: 'bafc9320-516a-49ac-98a7-b5999ca7b299'
@@ -23,17 +30,18 @@ stages:
 - stage: Build
   displayName: Build and push stage
   jobs:
-  - job: Build
-    displayName: Build
-    pool:
-      vmImage: $(vmImageName)
-    steps:
-    - task: Docker@2
-      displayName: Build and push an image to container registry
-      inputs:
-        command: buildAndPush
-        repository: $(imageRepository)
-        dockerfile: $(dockerfilePath)
-        containerRegistry: $(dockerRegistryServiceConnection)
-        tags: |
-          $(tag)
+  - ${{each container in parameters.containerList}}:
+    - job: Build
+      displayName: Build
+      pool:
+        vmImage: $(vmImageName)
+      steps:
+      - task: Docker@2
+        displayName: Build $(container) container
+        inputs:
+          command: buildAndPush
+          repository: $(container)
+          dockerfile: '$(Build.SourcesDirectory)/$(container)/Dockerfile'
+          containerRegistry: $(dockerRegistryServiceConnection)
+          tags: |
+            $(tag)
