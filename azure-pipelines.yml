@@ -36,8 +36,8 @@ jobs:
       displayName: Build $(container) container
       inputs:
         command: buildAndPush
-        repository: $(container)
-        dockerfile: '$(Build.SourcesDirectory)/$(container)/Dockerfile'
+        repository: ${{container}}
+        dockerfile: '$(Build.SourcesDirectory)/${{container}}/Dockerfile'
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
