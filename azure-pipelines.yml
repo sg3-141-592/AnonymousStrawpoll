@@ -21,7 +21,7 @@ variables:
   imageRepository: 'backend'
   containerRegistry: 'livepollregistry.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/backend/Dockerfile'
-  tag: '$(Build.BuildId)'
+  tag: 'latest'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
