@@ -27,11 +27,11 @@ variables:
   vmImageName: 'ubuntu-latest'
 
 jobs:
-- ${{each container in parameters.containerList}}:
-  - job: Build-${{container.key}}
-    pool:
-      vmImage: $(vmImageName)
-    steps:
+- job: BuildContainers
+  pool:
+    vmImage: $(vmImageName)
+  steps:
+  - ${{each container in parameters.containerList}}:
     - task: Docker@2
       displayName: Build $(container) container
       inputs:
