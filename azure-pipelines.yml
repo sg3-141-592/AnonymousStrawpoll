@@ -28,8 +28,7 @@ variables:
 
 jobs:
 - ${{each container in parameters.containerList}}:
-  - job: Build
-    displayName: Build
+  - job: Build-{{container.key}}
     pool:
       vmImage: $(vmImageName)
     steps:
