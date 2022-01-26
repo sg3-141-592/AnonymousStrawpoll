@@ -17,9 +17,9 @@ parameters:
 
 variables:
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: 'abcba22b-9a20-4005-801a-ad43ff8835a8'
-  imageRepository: 'livepollregistryazurecriobackend'
-  containerRegistry: 'livepolldevwxgnregistry.azurecr.io'
+  dockerRegistryServiceConnection: '5887297b-4498-44ea-8790-1f8cb027e460'
+  imageRepository: 'sganonymousstrawpoll'
+  containerRegistry: 'sgapps.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/backend/Dockerfile'
   tag: '$(Build.BuildId)'
 
