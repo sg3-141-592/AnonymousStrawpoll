@@ -1,17 +1,19 @@
-version: "2.4"
+version: "3.7"
 services:
   frontend:
     build: ./frontend
     networks:
       - backbone
     ports:
-      - 80:80
+      - 80
     depends_on:
       - backend
   backend:
     build: ./backend
     networks:
       - backbone
+    environment:
+      DB_CONNECTION_STRING: 'sqlite:///database/data.db'
     volumes:
       - databasevol:/database
 networks:

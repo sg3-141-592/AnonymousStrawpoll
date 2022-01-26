@@ -1,6 +1,7 @@
 import datetime
 import logging
 import time
+import os
 
 import numpy as np
 import pandas as pd
@@ -11,7 +12,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import func
 
 engine = create_engine(
-    "sqlite:///database/data.db", connect_args={"check_same_thread": False}, echo=False
+    os.environ["DB_CONNECTION_STRING"], echo=False
 )
 
 Base = declarative_base()
