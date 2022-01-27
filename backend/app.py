@@ -37,7 +37,13 @@ def createPoll():
     )
 
     database.session.add(newPoll)
-    database.session.commit()
+
+    try:
+        database.session.commit()
+    except:
+        # If a query fails then roll it back
+        database.session.rollback()
+        raise
 
     return Response(
         json.dumps({"id": publicId}), status=200, mimetype="application/json"
@@ -92,7 +98,13 @@ def vote(data):
         value=data["value"], pollId=data["pollId"], userId=data["userId"]
     )
     database.session.add(newVote)
-    database.session.commit()
+
+    try:
+        database.session.commit()
+    except:
+        # If a query fails the roll it back
+        database.session.rollback()
+        raise
 
     emit(
         "updateVotingDetails",
