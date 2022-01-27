@@ -31,7 +31,7 @@ class Poll(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String)
     options = Column(JSON)
-    userId = Column(String(100), unique=True)
+    userId = Column(String(100))
     created = Column(
         DateTime(timezone=True), default=datetime.datetime.utcnow, index=True
     )
