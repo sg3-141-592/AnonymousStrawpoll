@@ -2,6 +2,7 @@ import datetime
 import logging
 import time
 import os
+import urllib
 
 import numpy as np
 import pandas as pd
@@ -11,9 +12,15 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import func
 
-engine = create_engine(
-    os.environ["DB_CONNECTION_STRING"], echo=False
-)
+engine = None
+if os.environ["DB_CONNECTION_STRING"].startswith("sqlite:"):
+    engine = create_engine(
+        os.environ["DB_CONNECTION_STRING"], connect_args={"check_same_thread": False}, echo=False
+    )
+else:
+    engine = create_engine(
+        "mssql+pyodbc:///?odbc_connect=%s" % urllib.parse.quote_plus(os.environ["DB_CONNECTION_STRING"]), echo=False
+    )
 
 Base = declarative_base()
 
@@ -24,11 +31,11 @@ class Poll(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String)
     options = Column(JSON)
-    userId = Column(String, index=True)
+    userId = Column(String(100), unique=True)
     created = Column(
         DateTime(timezone=True), default=datetime.datetime.utcnow, index=True
     )
-    publicId = Column(String, index=True)
+    publicId = Column(String(100), unique=True)
 
 
 class Vote(Base):
@@ -36,8 +43,8 @@ class Vote(Base):
 
     id = Column(Integer, primary_key=True)
     value = Column(Float)
-    pollId = Column(Integer, ForeignKey("polls.publicId"), index=True)
-    userId = Column(String, index=True)
+    pollId = Column(String(100), ForeignKey("polls.publicId"), index=True)
+    userId = Column(String(100), index=True)
     created = Column(DateTime(timezone=True), default=datetime.datetime.utcnow)
 
 
@@ -145,13 +152,13 @@ Get the latest votes for all of the users on a poll
 def getLatestVotes(pollId):
 
     subq = (
-        session.query(Vote.id, Vote.userId, func.max(Vote.created).label("max_created"))
+        session.query(func.max(Vote.id).label("maxVoteId"))
         .filter(Vote.pollId == pollId)
         .group_by(Vote.userId)
         .subquery()
     )
 
-    q = session.query(Vote.value, Vote.created).join(subq, subq.c.id == Vote.id)
+    q = session.query(Vote.value, Vote.created).join(subq, subq.c.maxVoteId == Vote.id)
 
     votes = []
     for point in q:
