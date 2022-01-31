@@ -1,0 +1,57 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "DatabaseServerName": {
+            "type": "string",
+            "metadata": {
+                "description": "Database Server Name"
+            }
+        }
+    },
+    "variables": {
+        "dbPassword": "[concat('P', uniqueString(resourceGroup().id, '9A4F5A2B-21DB-46A3-A7C8-59B0DD584A41'), 'x', '!')]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Sql/servers",
+            "apiVersion": "2021-05-01-preview",
+            "name": "[parameters('DatabaseServerName')]",
+            "location": "uksouth",
+            "properties": {
+                "administratorLogin": "livepolladmin",
+                "administratorLoginPassword": "[variables('dbPassword')]"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases",
+            "apiVersion": "2021-05-01-preview",
+            "name": "[concat(parameters('DatabaseServerName'), '/','data')]",
+            "location": "uksouth",
+            "sku": {
+                "name": "Basic",
+                "tier": "Basic",
+                "capacity": 5
+            },
+            "kind": "v12.0,user",
+            "properties": {
+                "collation": "SQL_Latin1_General_CP1_CI_AS",
+                "maxSizeBytes": 104857600,
+                "catalogCollation": "SQL_Latin1_General_CP1_CI_AS",
+                "zoneRedundant": false,
+                "readScale": "Disabled",
+                "requestedBackupStorageRedundancy": "Local",
+                "isLedgerOn": false
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('DatabaseServerName'))]"
+            ]
+        }
+    ],
+    "outputs": {
+        "Admin Password": {
+            "type": "string",
+            "value": "[variables('dbPassword')]"
+        }
+    }
+}

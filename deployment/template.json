@@ -1,0 +1,53 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "name": "databaseDeployment",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2021-04-01",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "relativePath": "sql-template.json",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "DatabaseServerName": {
+                        "value": "LivePollDBARM1"
+                    }
+                }
+            }
+        },
+        {
+            "name": "appDeployment",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2021-04-01",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "relativePath": "app-template.json",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "location": {
+                        "value": "uksouth"
+                    },
+                    "linuxFxVersion": {
+                        "value": "COMPOSE|dmVyc2lvbjogIjMuNyIKc2VydmljZXM6CiAgZnJvbnRlbmQ6CiAgICBpbWFnZTogc2dhcHBzLmF6dXJlY3IuaW8vZnJvbnRlbmQ6bGF0ZXN0CiAgICBuZXR3b3JrczoKICAgICAgLSBiYWNrYm9uZQogICAgcG9ydHM6CiAgICAgIC0gODA6ODAKICAgIGRlcGVuZHNfb246CiAgICAgIC0gYmFja2VuZAogIGJhY2tlbmQ6CiAgICBpbWFnZTogc2dhcHBzLmF6dXJlY3IuaW8vYmFja2VuZDpsYXRlc3QKICAgIG5ldHdvcmtzOgogICAgICAtIGJhY2tib25lCiAgICBlbnZpcm9ubWVudDoKICAgICAgREJfQ09OTkVDVElPTl9TVFJJTkc6ICdEcml2ZXI9e09EQkMgRHJpdmVyIDE3IGZvciBTUUwgU2VydmVyfTtTZXJ2ZXI9dGNwOmxpdmVwb2xsZGF0YWJhc2VzZXJ2ZXIuZGF0YWJhc2Uud2luZG93cy5uZXQsMTQzMztEYXRhYmFzZT1kYXRhO1VpZD1saXZlcG9sbGFkbWluO1B3ZD1QZWFOdXRKZTExeW5qZDtFbmNyeXB0PXllcztUcnVzdFNlcnZlckNlcnRpZmljYXRlPW5vO0Nvbm5lY3Rpb24gVGltZW91dD0zMDsnCiAgICB2b2x1bWVzOgogICAgICAtIGRhdGFiYXNldm9sOi9kYXRhYmFzZQpuZXR3b3JrczoKICBiYWNrYm9uZToKICAgIGRyaXZlcjogYnJpZGdlCnZvbHVtZXM6CiAgZGF0YWJhc2V2b2w6Cg=="
+                    },
+                    "webAppName": {
+                        "value": "LivePollARM1"
+                    }
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', 'databaseDeployment')]"
+            ]
+        }
+    ],
+    "outputs": {}
+}
