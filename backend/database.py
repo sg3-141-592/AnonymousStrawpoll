@@ -1,4 +1,5 @@
 import datetime
+import json
 import logging
 import time
 import os
@@ -47,6 +48,12 @@ class Vote(Base):
     userId = Column(String(100), index=True)
     created = Column(DateTime(timezone=True), default=datetime.datetime.utcnow)
 
+class Analytics(Base):
+    __tablename__ = 'analytics'
+
+    id = Column(Integer, primary_key=True)
+    pollId = Column(String(100), ForeignKey("polls.publicId"), index=True, unique=True)
+    resampledData = Column(JSON)
 
 Base.metadata.create_all(engine)
 
@@ -119,6 +126,23 @@ def getAverageVoteData(pollId):
 
         for index, row in resampled.iterrows():
             outputData["averageData"].append({"x": datetime.datetime.timestamp(index), "y": row["y"]})
+        
+        # See if we already have an average value
+        averageData = None
+        averageData = session.query(Analytics).filter_by(
+            pollId=pollId
+        ).first()
+        
+        if averageData:
+            averageData.resampledData = json.dumps(outputData["averageData"])
+        else:
+            # Write the average data to file
+            averageData = Analytics(
+                pollId=pollId,
+                resampledData = json.dumps(outputData["averageData"])
+            )
+            session.add(averageData)
+        session.commit()
     
     outputData["userCount"] = getUserCount(pollId)
     outputData["latestPoints"] = getLatestVotes(pollId)
