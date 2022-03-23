@@ -1,4 +1,5 @@
 <template>
+    <h2 class="subtitle is-4">Create Poll</h2>
     <select-poll-type @changed="data => pollType = data"/>
     
     <div v-if="pollType == 'Slider'">
